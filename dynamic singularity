@@ -1,0 +1,33 @@
+import numpy as np 
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
+import matplotlib.animation as animation
+
+# 設定圖像的大小和比例
+fig, ax = plt.subplots(figsize=(6, 6))
+
+# 產生一個自定義的顏色映射
+colors = ['black', 'white', 'gray', 'black']
+cmap = LinearSegmentedColormap.from_list('bw_gray', colors, N=256)
+
+# 生成座標系
+X, Y = np.meshgrid(np.linspace(-2 * np.pi, 2 * np.pi, 400),
+                   np.linspace(-2 * np.pi, 2 * np.pi, 400))
+
+# 計算一個螺旋形狀的基礎模式
+Z_base = np.sin(X) + np.cos(Y)
+
+# 動態更新函數
+def update(frame):
+    Z_dynamic = Z_base + 0.3 * np.sin(X * 2 + frame / 10) * np.cos(Y * 2 - frame / 10)
+    ax.clear()
+    ax.imshow(Z_dynamic, cmap=cmap, interpolation='bilinear', extent=[-2*np.pi, 2*np.pi, -2*np.pi, 2*np.pi])
+    ax.set_title("Dynamic singularity")
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+# 動畫
+ani = animation.FuncAnimation(fig, update, frames=100, interval=50)
+
+# 顯示動畫
+plt.show()
